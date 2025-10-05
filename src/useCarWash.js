@@ -1,6 +1,7 @@
 import { ref, onMounted, reactive } from 'vue';
 
-const API_URL = 'http://localhost:8000';
+// Usar la variable de entorno VITE_API_URL en Vite (colócala en .env), con fallback local
+const API_URL = import.meta.env.URL || 'http://localhost:8000';
 
 // Este es un "composable" de Vue.
 // Encapsula la lógica y el estado para que puedan ser reutilizados.
