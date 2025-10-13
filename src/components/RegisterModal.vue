@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+  <div v-if="showModal" class="fixed inset-0 bg-opacity-75 flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 relative">
       <button @click="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
         <!-- Icono X -->
@@ -13,10 +13,10 @@
 
       <form @submit.prevent="registerAndAssign" class="space-y-4">
         <!-- Datos del Auto -->
-        <input v-model="newCarAssignment.owner_name" placeholder="Nombre del Dueño" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-        <input v-model="newCarAssignment.owner_phone" placeholder="Número de Celular" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-        <input v-model="newCarAssignment.plate" placeholder="Placa del Auto (Ej: P3R512)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 uppercase">
-        <select v-model="newCarAssignment.car_type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
+        <input v-model="newCarAssignment.owner_name" placeholder="Nombre del Dueño" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-black">
+        <input v-model="newCarAssignment.owner_phone" placeholder="Número de Celular" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-black">
+        <input v-model="newCarAssignment.plate" placeholder="Placa del Auto (Ej: P3R512)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-black uppercase">
+        <select v-model="newCarAssignment.car_type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white text-black">
           <option value="" disabled>Selecciona Tipo de Auto</option>
           <option value="Sedan">Sedán</option>
           <option value="SUV">SUV</option>
@@ -27,7 +27,7 @@
         <div class="pt-2 border-t border-dashed">
           <!-- Asignación de Empleado -->
           <h3 class="text-lg font-semibold text-gray-700 mb-2">👨‍🔧 Asignar Empleado</h3>
-          <select v-model="newCarAssignment.employee_name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 bg-white">
+          <select v-model="newCarAssignment.employee_name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500 bg-white text-black">
             <option value="" disabled>Selecciona Empleado</option>
             <option v-for="employee in employees" :key="employee" :value="employee">{{ employee }}</option>
           </select>
