@@ -169,7 +169,8 @@ const fetchHistory = async (plate) => {
   error.value = '';
   
   try {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const API_URL = 'https://carwashcloudapi-production.up.railway.app';
+    // const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     
     console.log('Fetching history for plate:', plate);
     const response = await fetch(`${API_URL}/cars/${plate}/history`);
