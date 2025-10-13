@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full max-w-6xl mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">👥 Clientes</h1>
-      <div class="text-sm text-gray-500">
+  <div class="w-full max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">👥 Clientes</h1>
+      <div class="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
         Total: {{ clients.length }} clientes
       </div>
     </div>
@@ -28,13 +28,14 @@
       </div>
 
       <template v-for="client in filteredClients" :key="client.id">
-        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold text-gray-800">{{ client.name }}</h3>
-                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                  ID: {{ client.id }}
+        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div class="flex flex-col lg:flex-row lg:items-center gap-4">
+            <!-- Información principal -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-800 truncate">{{ client.name }}</h3>
+                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full self-start">
+                  ID: {{ client.id.substring ? client.id.substring(0, 8) + '...' : client.id }}
                 </span>
               </div>
               
@@ -65,21 +66,24 @@
               </div>
             </div>
 
-            <div class="flex items-center gap-3 ml-4">
+            <!-- Botones de acción -->
+            <div class="flex flex-row sm:flex-col lg:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mt-3 lg:mt-0">
               <button 
                 @click="copyPhone(client.phone)" 
                 v-if="client.phone"
                 title="Copiar teléfono"
-                class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
+                class="flex-1 sm:flex-none p-2 sm:p-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors text-center"
               >
-                📞
+                <span class="block sm:hidden">📞 Copiar</span>
+                <span class="hidden sm:block">📞</span>
               </button>
               
               <button 
                 @click="openHistory(client)" 
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
               >
-                Ver Historial
+                <span class="sm:hidden">Historial</span>
+                <span class="hidden sm:inline">Ver Historial</span>
               </button>
             </div>
           </div>

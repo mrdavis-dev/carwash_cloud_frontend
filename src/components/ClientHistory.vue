@@ -1,18 +1,18 @@
 <template>
-  <div class="fixed inset-0 z-50 flex items-start justify-center pt-8 px-4">
+  <div class="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-8 px-2 sm:px-4">
     <!-- Overlay -->
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
 
     <!-- Modal -->
-    <div class="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden z-60 relative">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-hidden z-60 relative">
       <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-        <div class="flex items-start justify-between">
-          <div>
-            <h2 class="text-2xl font-bold mb-1">{{ client?.name }}</h2>
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-6">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0 flex-1">
+            <h2 class="text-xl sm:text-2xl font-bold mb-1 truncate">{{ client?.name }}</h2>
             <div class="text-blue-100 text-sm space-y-1">
-              <div v-if="client?.phone">📞 {{ client.phone }}</div>
-              <div class="flex items-center gap-4">
+              <div v-if="client?.phone" class="truncate">📞 {{ client.phone }}</div>
+              <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                 <span class="flex items-center gap-1">
                   🏆 <strong>{{ client?.points || 0 }}</strong> puntos
                 </span>
@@ -24,7 +24,7 @@
           </div>
           <button 
             @click="close" 
-            class="text-blue-100 hover:text-white text-xl font-bold p-2 hover:bg-blue-800 rounded-lg transition-colors"
+            class="text-blue-100 hover:text-white text-xl font-bold p-2 hover:bg-blue-800 rounded-lg transition-colors flex-shrink-0"
           >
             ✕
           </button>
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Content -->
-      <div class="p-6 overflow-y-auto max-h-[60vh]">
+      <div class="p-4 sm:p-6 overflow-y-auto max-h-[50vh] sm:max-h-[60vh]">
         <!-- Loading state -->
         <div v-if="loading" class="text-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
@@ -63,51 +63,51 @@
           <div 
             v-for="(entry, index) in historySorted" 
             :key="entry.id || index"
-            class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+            class="border border-gray-200 rounded-lg p-3 sm:p-4 hover:bg-gray-50 transition-colors"
           >
-            <div class="flex justify-between items-start">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
               <div class="flex-1">
                 <!-- Fecha y hora -->
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-3">
                   <span class="text-sm font-medium text-gray-800">
                     {{ formatDate(entry.date) }}
                   </span>
-                  <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                  <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded self-start">
                     #{{ entry.id || (index + 1) }}
                   </span>
                 </div>
 
                 <!-- Detalles del lavado -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-black">
-                  <div class="flex items-center gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-sm text-black">
+                  <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
                     <span class="text-gray-500">🚗</span>
-                    <span class="font-medium">{{ entry.car_plate || 'N/A' }}</span>
+                    <span class="font-medium truncate">{{ entry.car_plate || 'N/A' }}</span>
                   </div>
                   
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
                     <span class="text-gray-500">👨‍🔧</span>
-                    <span>{{ entry.employee_name || 'Sin asignar' }}</span>
+                    <span class="truncate">{{ entry.employee_name || 'Sin asignar' }}</span>
                   </div>
                   
-                  <div class="flex items-center gap-2">
-                    <span class="text-gray-500">�</span>
-                    <span>{{ entry.service_type || 'Lavado' }}</span>
+                  <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                    <span class="text-gray-500">🚿</span>
+                    <span class="truncate">{{ entry.service_type || 'Lavado' }}</span>
                   </div>
                   
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 p-2 bg-gray-50 rounded">
                     <span class="text-gray-500">📋</span>
-                    <span class="capitalize">{{ entry.status || 'Completado' }}</span>
+                    <span class="capitalize truncate">{{ entry.status || 'Completado' }}</span>
                   </div>
                 </div>
 
                 <!-- Notas adicionales -->
-                <div v-if="entry.notes" class="mt-2 text-sm text-gray-600 italic">
+                <div v-if="entry.notes" class="mt-3 p-2 bg-blue-50 rounded text-sm text-gray-600 italic">
                   "{{ entry.notes }}"
                 </div>
               </div>
 
               <!-- Puntos ganados -->
-              <div class="ml-4 text-right">
+              <div class="sm:ml-4 text-center sm:text-right">
                 <div class="text-lg font-bold text-green-600">
                   +{{ entry.points || 1 }}
                 </div>
@@ -119,15 +119,15 @@
       </div>
 
       <!-- Footer -->
-      <div class="bg-gray-50 px-6 py-4 border-t">
-        <div class="flex justify-between items-center">
-          <div class="text-sm text-gray-600">
+      <div class="bg-gray-50 px-4 sm:px-6 py-4 border-t">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+          <div class="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
             <strong>Total:</strong> {{ history.length }} {{ history.length === 1 ? 'lavado' : 'lavados' }} 
             • <strong>{{ totalPoints }}</strong> puntos acumulados
           </div>
           <button 
             @click="close"
-            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto"
           >
             Cerrar
           </button>
