@@ -1,6 +1,7 @@
 import { ref, onMounted, reactive } from 'vue';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = 'https://carwashcloudapi-production.up.railway.app';
 
 // Este es un "composable" de Vue.
 // Encapsula la lógica y el estado para que puedan ser reutilizados.
