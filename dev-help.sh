@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Script de ayuda para desarrollo
+
+echo "🚀 Carwash Cloud - Comandos de Desarrollo"
+echo ""
+echo "Comandos disponibles:"
+echo "  npm run dev      - Iniciar servidor de desarrollo"
+echo "  npm run build    - Compilar para producción"
+echo "  npm run preview  - Vista previa de producción"
+echo ""
+echo "⚙️  Configuración actual:"
+echo "  API URL: $(grep VITE_API_URL .env 2>/dev/null || echo 'No configurada')"
+echo ""
+echo "📁 Estructura:"
+echo "  - src/views/auth/         → Login & Signup"
+echo "  - src/views/cars/         → Gestión de Autos"
+echo "  - src/views/assignments/  → Gestión de Asignaciones"
+echo "  - src/stores/             → Estado global (Pinia)"
+echo "  - src/api/                → Servicios HTTP"
+echo ""
+echo "🔧 Troubleshooting:"
+echo "  - Si hay errores de CORS, verifica el backend"
+echo "  - Para limpiar cache: rm -rf node_modules/.vite"
+echo "  - Para reinstalar: rm -rf node_modules && npm install"
+echo ""
