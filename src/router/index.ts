@@ -60,7 +60,7 @@ const router = createRouter({
 })
 
 // Navigation guard para proteger rutas
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore()
   const requiresAuth = to.meta.requiresAuth
 
