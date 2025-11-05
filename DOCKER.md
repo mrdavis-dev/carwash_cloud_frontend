@@ -29,7 +29,16 @@ docker build -t carwash-cloud-frontend .
 ### Ejecutar el contenedor:
 
 ```bash
-docker run -d -p 8080:80 --name carwash-frontend carwash-cloud-frontend
+docker run -d -p 8080:3000 --name carwash-frontend carwash-cloud-frontend
+```
+
+### Con variable de entorno para la API:
+
+```bash
+docker run -d -p 8080:3000 \
+  -e PORT=3000 \
+  --name carwash-frontend \
+  carwash-cloud-frontend
 ```
 
 ### Detener y eliminar:
@@ -53,11 +62,11 @@ Railway detectará automáticamente el `Dockerfile` y lo usará para el deploy.
 
 3. **Railway ejecutará automáticamente:**
    ```bash
-   docker build -t app .
-   docker run -p $PORT:80 app
+   docker build --build-arg VITE_API_URL=$VITE_API_URL -t app .
+   docker run -p $PORT:3000 app
    ```
 
-4. **Railway automáticamente expone el puerto 80 internamente**
+4. **Railway automáticamente expone el puerto que definas en la variable PORT**
 
 ---
 
@@ -76,8 +85,11 @@ Para configurar la URL de la API en producción:
 Modifica `docker-compose.yml`:
 
 ```yaml
+build:
+  args:
+    - VITE_API_URL=http://localhost:8000
 environment:
-  - VITE_API_URL=http://localhost:8000
+  - PORT=3000
 ```
 
 O usa un archivo `.env.production`:
@@ -90,13 +102,13 @@ VITE_API_URL=https://tu-backend-url.com
 
 ## Verificar que funciona
 
-### Check de salud:
+### Verificar el servicio:
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:8080
 ```
 
-Debería responder: `healthy`
+Debería devolver el HTML de la aplicación.
 
 ### Ver logs:
 
@@ -111,12 +123,11 @@ docker-compose logs -f
 
 ## Optimizaciones incluidas
 
-✅ **Multi-stage build** - Imagen final pequeña (~50MB)  
-✅ **Nginx Alpine** - Servidor web eficiente  
-✅ **Gzip compression** - Archivos comprimidos  
-✅ **Cache headers** - Cacheo de assets estáticos  
+✅ **Single-stage build** - Imagen con Node.js Alpine (~200MB)  
+✅ **Serve** - Servidor estático simple y eficiente  
 ✅ **SPA routing** - Todas las rutas van a index.html  
-✅ **Health check** - Endpoint /health para monitoreo  
+✅ **Puerto dinámico** - Compatible con Railway y otras plataformas  
+✅ **Build-time args** - VITE_API_URL se inyecta en el build  
 
 ---
 
@@ -164,18 +175,16 @@ docker exec carwash-frontend ps aux
 ## Estructura de la imagen
 
 ```
-Etapa 1 (builder): Node 18 Alpine
-  ├── Instala dependencias
+Node 18 Alpine
+  ├── Instala dependencias (npm ci)
+  ├── Instala 'serve' globalmente
   ├── Copia código fuente
-  └── Ejecuta build (npm run build)
-
-Etapa 2 (producción): Nginx Alpine
-  ├── Copia dist/ desde builder
-  ├── Copia nginx.conf
-  └── Expone puerto 80
+  ├── Ejecuta build (npm run build)
+  ├── Limpia archivos innecesarios
+  └── Sirve dist/ con 'serve' en puerto 3000
 ```
 
-**Tamaño final:** ~50MB (vs ~1GB con Node completo)
+**Tamaño final:** ~200MB (optimizado para simplicidad)
 
 ---
 

@@ -1,5 +1,5 @@
-# Etapa 1: Build
-FROM node:18-alpine as builder
+# Usar Node.js 18 Alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -9,23 +9,25 @@ COPY package*.json ./
 # Instalar dependencias
 RUN npm ci
 
+# Instalar 'serve' para servir archivos estáticos
+RUN npm install -g serve
+
 # Copiar el resto de los archivos
 COPY . .
+
+# Argumento para la URL de la API (se pasa desde Railway)
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build de la aplicación
 RUN npm run build
 
-# Etapa 2: Producción con Nginx
-FROM nginx:alpine
+# Limpiar archivos innecesarios para reducir tamaño
+RUN rm -rf node_modules src public
 
-# Copiar los archivos buildados
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Exponer puerto (Railway asigna PORT dinámicamente)
+EXPOSE 3000
 
-# Copiar configuración personalizada de nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Exponer puerto 80
-EXPOSE 80
-
-# Comando para iniciar nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Servir los archivos estáticos
+# serve usa automáticamente la variable PORT si está disponible
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-3000}"]
