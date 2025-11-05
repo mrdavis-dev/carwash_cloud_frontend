@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+dist
+.env
+.env.local
+.env.production
+.vscode
+*.md
+!README.md
+.gitignore
+dev-help.sh

@@ -75,7 +75,27 @@ npm run build
 
 Los archivos optimizados se generarán en la carpeta `dist/`.
 
-## 👀 Preview de Producción
+## � Deploy con Docker
+
+### Opción 1: Docker Compose (Local)
+
+```bash
+docker-compose up --build
+```
+
+Aplicación en: `http://localhost:8080`
+
+### Opción 2: Railway (Producción)
+
+Railway detectará automáticamente el `Dockerfile`:
+
+1. Conecta tu repositorio a Railway
+2. Configura variable: `VITE_API_URL=https://tu-backend.railway.app`
+3. Deploy automático ✅
+
+📖 **Documentación completa:** Ver [DOCKER.md](./DOCKER.md)
+
+## �👀 Preview de Producción
 
 ```bash
 npm run preview
