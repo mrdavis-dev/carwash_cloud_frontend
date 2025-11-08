@@ -1,7 +1,18 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios'
 import router from '@/router'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const envUrl = import.meta.env.VITE_API_URL
+let API_URL = envUrl ?? (import.meta.env.DEV ? 'http://localhost:8000' : '')
+
+// Normalizar: si falta protocolo, añadir http para dev o https para prod
+if (API_URL && !/^https?:\/\//i.test(API_URL)) {
+  API_URL = `${import.meta.env.DEV ? 'http://' : 'https://'}${API_URL}`
+}
+
+// Si queda vacío, usar localhost en dev
+if (!API_URL) {
+  API_URL = 'http://localhost:8000'
+}
 
 // Log para debug - se verá en la consola del navegador
 console.log('🔧 Configuración de API:', {
