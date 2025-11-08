@@ -20,8 +20,14 @@ COPY . .
 ARG VITE_API_URL=https://carwashcloudapi-production.up.railway.app
 ENV VITE_API_URL=$VITE_API_URL
 
+# Verificar la URL de la API antes del build
+RUN echo "🔧 Building with VITE_API_URL: $VITE_API_URL"
+
 # Build de la aplicación
 RUN npm run build
+
+# Verificar que la URL se embedió correctamente
+RUN grep -o "https://carwashcloudapi" dist/assets/*.js | head -1 || echo "⚠️ WARNING: Backend URL not found in build!"
 
 # Limpiar archivos innecesarios para reducir tamaño
 RUN rm -rf node_modules src public
