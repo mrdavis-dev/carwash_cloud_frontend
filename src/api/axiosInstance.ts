@@ -23,7 +23,7 @@ const axiosInstance: AxiosInstance = axios.create({
 // Interceptor para agregar el token JWT a las peticiones
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('access_token')
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -49,7 +49,16 @@ axiosInstance.interceptors.response.use(
       status: response.status,
       url: response.config.url,
       data: response.data,
+      contentType: response.headers['content-type'],
     })
+    
+    // Verificar si la respuesta es HTML cuando esperamos JSON
+    const contentType = response.headers['content-type']
+    if (contentType && contentType.includes('text/html')) {
+      console.error('⚠️ Recibido HTML en lugar de JSON. Verifica la URL del backend.')
+      throw new Error('El servidor respondió con HTML. Verifica que la URL del backend sea correcta.')
+    }
+    
     return response
   },
   (error: AxiosError) => {
@@ -62,7 +71,7 @@ axiosInstance.interceptors.response.use(
     })
     if (error.response?.status === 401) {
       // Token inválido o expirado
-      localStorage.removeItem('token')
+      localStorage.removeItem('access_token')
       router.push('/login')
     }
     return Promise.reject(error)
