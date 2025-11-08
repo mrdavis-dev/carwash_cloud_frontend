@@ -20,6 +20,13 @@
             Autos
           </router-link>
           <router-link
+            to="/employees"
+            class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            :class="isActive('/employees') ? 'bg-gray-100 dark:bg-gray-700' : ''"
+          >
+            Empleados
+          </router-link>
+          <router-link
             to="/assignments"
             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             :class="isActive('/assignments') ? 'bg-gray-100 dark:bg-gray-700' : ''"

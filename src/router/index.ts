@@ -52,6 +52,25 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/assignments/NewAssignmentView.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/employees',
+    name: 'Employees',
+    component: () => import('@/views/employees/EmployeesView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/employees/new',
+    name: 'NewEmployee',
+    component: () => import('@/views/employees/NewEmployeeView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/employees/:id/edit',
+    name: 'EditEmployee',
+    component: () => import('@/views/employees/EditEmployeeView.vue'),
+    meta: { requiresAuth: true },
+    props: true,
+  },
 ]
 
 const router = createRouter({

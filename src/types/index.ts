@@ -78,6 +78,28 @@ export interface User {
   business_id: number
 }
 
+// Empleados
+export interface Employee {
+  id: number
+  name: string
+  role?: string
+  phone?: string
+  business_id: number
+  created_at?: string
+}
+
+export interface CreateEmployeeRequest {
+  name: string
+  role?: string
+  phone?: string
+}
+
+export interface UpdateEmployeeRequest {
+  name?: string
+  role?: string
+  phone?: string
+}
+
 // Toast notifications
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
