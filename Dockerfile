@@ -15,13 +15,10 @@ RUN npm install -g serve
 # Copiar el resto de los archivos
 COPY . .
 
-# Argumento para la URL de la API (se pasa desde Railway)
-ARG VITE_API_URL
+# Argumento para la URL de la API
+# Por defecto usa la URL de producción de Railway
+ARG VITE_API_URL=https://carwashcloudapi-production.up.railway.app
 ENV VITE_API_URL=$VITE_API_URL
-
-# Debug: Mostrar la URL del API durante el build
-RUN echo "🔧 Building with VITE_API_URL: $VITE_API_URL"
-RUN env | grep VITE || echo "No VITE_ variables found"
 
 # Build de la aplicación
 RUN npm run build
