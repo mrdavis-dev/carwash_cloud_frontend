@@ -3,6 +3,15 @@ import router from '@/router'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
+// Log para debug - se verá en la consola del navegador
+console.log('🔧 Configuración de API:', {
+  VITE_API_URL: import.meta.env.VITE_API_URL,
+  API_URL,
+  MODE: import.meta.env.MODE,
+  DEV: import.meta.env.DEV,
+  PROD: import.meta.env.PROD,
+})
+
 // Crear instancia de axios con configuración base
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -11,39 +20,52 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 })
 
-// Interceptor de request para inyectar el token JWT
+// Interceptor para agregar el token JWT a las peticiones
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token')
-    
+    const token = localStorage.getItem('token')
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    
+    // Log de requests para debug
+    console.log('🌐 Request:', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      fullURL: `${config.baseURL}${config.url}`,
+      hasToken: !!token,
+    })
     return config
   },
-  (error) => {
+  (error: AxiosError) => {
     return Promise.reject(error)
   }
 )
 
-// Interceptor de response para manejar errores globalmente
+// Interceptor para manejar errores de respuesta
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Log de responses exitosas para debug
+    console.log('✅ Response:', {
+      status: response.status,
+      url: response.config.url,
+      data: response.data,
+    })
+    return response
+  },
   (error: AxiosError) => {
-    // Si recibimos 401 (Unauthorized), limpiar token y redirigir a login
+    // Log de errores para debug
+    console.error('❌ Response Error:', {
+      status: error.response?.status,
+      url: error.config?.url,
+      data: error.response?.data,
+      message: error.message,
+    })
     if (error.response?.status === 401) {
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('user')
+      // Token inválido o expirado
+      localStorage.removeItem('token')
       router.push('/login')
     }
-
-    // Manejar otros errores
-    const errorMessage = error.response?.data 
-      ? (error.response.data as any).detail || (error.response.data as any).message || 'Error en la solicitud'
-      : error.message || 'Error de conexión'
-
-    return Promise.reject(new Error(errorMessage))
+    return Promise.reject(error)
   }
 )
 

@@ -53,17 +53,32 @@ export const useAuthStore = defineStore('auth', () => {
    */
   async function login(credentials: LoginRequest) {
     try {
+      console.log('🔐 Attempting login...')
       const response = await authApi.login(credentials)
+      
+      console.log('✅ Login response received:', {
+        hasAccessToken: !!response.access_token,
+        tokenLength: response.access_token?.length,
+      })
       
       // Guardar token en localStorage
       token.value = response.access_token
       localStorage.setItem('access_token', response.access_token)
       
+      console.log('💾 Token saved to localStorage')
+      
       // Cargar datos del usuario desde el token
       loadUserFromToken()
       
+      console.log('👤 User loaded:', {
+        hasUser: !!user.value,
+        username: user.value?.username,
+        businessId: user.value?.business_id,
+      })
+      
       return { success: true }
     } catch (error) {
+      console.error('❌ Login error:', error)
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Error al iniciar sesión' 

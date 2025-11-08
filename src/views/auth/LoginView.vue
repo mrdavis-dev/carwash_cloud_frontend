@@ -16,29 +16,15 @@
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
           <label for="username" class="label">Usuario</label>
-          <input
-            id="username"
-            v-model="form.username"
-            type="text"
-            required
-            class="input"
-            :class="{ 'border-red-500': errors.username }"
-            placeholder="Tu nombre de usuario"
-          />
+          <input id="username" v-model="form.username" type="text" required class="input"
+            :class="{ 'border-red-500': errors.username }" placeholder="Tu nombre de usuario" />
           <p v-if="errors.username" class="error-message">{{ errors.username }}</p>
         </div>
 
         <div>
           <label for="password" class="label">Contraseña</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            required
-            class="input"
-            :class="{ 'border-red-500': errors.password }"
-            placeholder="Tu contraseña"
-          />
+          <input id="password" v-model="form.password" type="password" required class="input"
+            :class="{ 'border-red-500': errors.password }" placeholder="Tu contraseña" />
           <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
         </div>
 
@@ -46,15 +32,13 @@
           <p class="text-sm text-red-800 dark:text-red-200">{{ errors.general }}</p>
         </div>
 
-        <button
-          type="submit"
-          :disabled="loading"
-          class="btn btn-primary w-full"
-        >
+        <button type="submit" :disabled="loading" class="btn btn-primary w-full">
           <span v-if="loading" class="flex items-center justify-center">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
             </svg>
             Iniciando sesión...
           </span>
@@ -115,11 +99,16 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
-  if (!validateForm()) return
+  console.log('📝 Form submit initiated')
+  if (!validateForm()) {
+    console.log('⚠️ Form validation failed')
+    return
+  }
 
   loading.value = true
   resetErrors()
 
+  console.log('🚀 Calling authStore.login...')
   const result = await authStore.login({
     username: form.username,
     password: form.password,
@@ -127,10 +116,21 @@ const handleSubmit = async () => {
 
   loading.value = false
 
+  console.log('📊 Login result:', result)
+
   if (result.success) {
+    console.log('✅ Login successful, redirecting to /cars')
     toastStore.success('¡Bienvenido!')
-    router.push('/cars')
+    
+    // Intentar redireccionar
+    try {
+      await router.push('/cars')
+      console.log('✅ Router.push completed')
+    } catch (error) {
+      console.error('❌ Router.push failed:', error)
+    }
   } else {
+    console.error('❌ Login failed:', result.error)
     errors.general = result.error || 'Error al iniciar sesión'
   }
 }
