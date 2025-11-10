@@ -14,6 +14,15 @@ if (!API_URL) {
   API_URL = 'http://localhost:8000'
 }
 
+// Evitar Mixed Content en runtime: si la app se sirve por HTTPS y la API quedó con http://,
+// forzar https:// (esto cubre casos donde VITE_API_URL fue seteada sin protocolo)
+if (typeof window !== 'undefined' && window.location && window.location.protocol === 'https:') {
+  if (API_URL.startsWith('http://')) {
+    console.warn('⚠️ API_URL usa http:// mientras la página está en HTTPS — convirtiendo a https:// para evitar Mixed Content')
+    API_URL = API_URL.replace(/^http:\/\//i, 'https://')
+  }
+}
+
 // Log para debug - se verá en la consola del navegador
 console.log('🔧 Configuración de API:', {
   VITE_API_URL: import.meta.env.VITE_API_URL,
@@ -35,15 +44,33 @@ const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('access_token')
+    
+    // Log detallado para debugging
+    console.log('🔑 Token debug:', {
+      tokenExists: !!token,
+      tokenLength: token?.length,
+      tokenPreview: token?.substring(0, 20) + '...',
+      hasHeaders: !!config.headers,
+    })
+    
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
+      console.log('✅ Authorization header added')
+    } else {
+      console.warn('⚠️ No token found or headers missing:', {
+        token: !!token,
+        headers: !!config.headers
+      })
     }
+    
     // Log de requests para debug
+    const authHeader = config.headers?.Authorization
     console.log('🌐 Request:', {
       method: config.method?.toUpperCase(),
       url: config.url,
       fullURL: `${config.baseURL}${config.url}`,
       hasToken: !!token,
+      authHeader: typeof authHeader === 'string' ? authHeader.substring(0, 30) + '...' : authHeader,
     })
     return config
   },
